@@ -2,8 +2,8 @@ use iso3166::Country;
 use serde::{Deserialize, Serialize};
 use sha3::Sha3_256;
 
-use crate::common::{Action, Currency, Language, MpiEci, Prepare, Result, Status, Version};
-use crate::traits::{LiqPayRequest, LiqPayResponse};
+use crate::common::enums::{Action, Currency, Language, MpiEci, Prepare, Result, Status, Version};
+use crate::common::traits::{LiqPayRequest, LiqPayResponse};
 
 #[derive(Debug, Serialize)]
 pub struct P2PDebitRequest {

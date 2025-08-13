@@ -1,9 +1,11 @@
 use serde::{Deserialize, Serialize};
 use sha1::Sha1;
 
-use crate::common::{Action, Bonus, Currency, Language, MpiEci, PayType, Result, Status, Version};
+use crate::common::enums::{
+    Action, Bonus, Currency, Language, MpiEci, PayType, Result, Status, Version,
+};
+use crate::common::traits::{LiqPayRequest, LiqPayResponse};
 use crate::internet_acquiring::common::DetailAddenda;
-use crate::traits::{LiqPayRequest, LiqPayResponse};
 
 #[derive(Serialize, Debug)]
 pub struct TokenPaymentRequest {

@@ -3,9 +3,9 @@ use iso3166::Country;
 use serde::{Deserialize, Serialize};
 use sha3::Sha3_256;
 
-use crate::common::{Action, Currency, Language, MpiEci, PayType, Result, Status, Version};
+use crate::common::enums::{Action, Currency, Language, MpiEci, PayType, Result, Status, Version};
+use crate::common::traits::{LiqPayRequest, LiqPayResponse};
 use crate::internet_acquiring::common::DetailAddenda;
-use crate::traits::{LiqPayRequest, LiqPayResponse};
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum DigitalWallet {
@@ -108,7 +108,7 @@ impl TwoStageRequest {
         request.card = Some(card);
         request.card_exp_month = Some(exp_month);
         request.card_exp_year = Some(exp_year);
-        
+
         request
     }
 

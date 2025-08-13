@@ -1,8 +1,10 @@
 use serde::{Deserialize, Serialize};
 use sha3::Sha3_256;
 
-use crate::common::{Action, Bonus, Currency, Language, MpiEci, PayType, Result, Status, Version};
-use crate::traits::{LiqPayRequest, LiqPayResponse};
+use crate::common::enums::{
+    Action, Bonus, Currency, Language, MpiEci, PayType, Result, Status, Version,
+};
+use crate::common::traits::{LiqPayRequest, LiqPayResponse};
 
 #[derive(Debug, Serialize)]
 pub struct OtpRequest {

@@ -2,9 +2,9 @@ use serde::{Deserialize, Serialize};
 use sha1::Sha1;
 use sha3::Sha3_256;
 
-use crate::common::{Action, Currency, Language, Result, Status, Version};
+use crate::common::enums::{Action, Currency, Language, Result, Status, Version};
+use crate::common::traits::{LiqPayRequest, LiqPayResponse};
 use crate::internet_acquiring::common::RroInfo;
-use crate::traits::{LiqPayRequest, LiqPayResponse};
 
 #[derive(Debug, Serialize)]
 pub struct SendInvoiceRequest {

@@ -1,9 +1,9 @@
 use serde::{Deserialize, Serialize};
 use sha3::Sha3_256;
 
-use crate::common::{Action, Bonus, Currency, PayType, Result, Status, Version};
+use crate::common::enums::{Action, Bonus, Currency, PayType, Result, Status, Version};
+use crate::common::traits::{LiqPayRequest, LiqPayResponse};
 use crate::information::common::ResponseFormat;
-use crate::traits::{LiqPayRequest, LiqPayResponse};
 
 #[derive(Debug, Serialize)]
 pub struct CompensationReportRequest {

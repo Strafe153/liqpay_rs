@@ -3,6 +3,9 @@ name = "liqpay_rs"
 version = "0.1.0"
 edition = "2024"
 
+[features]
+blocking = ["reqwest/blocking"]
+
 [dependencies]
 base64 = "0.22.1"
 iso3166 = "1.2.1"

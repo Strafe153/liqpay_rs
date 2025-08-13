@@ -2,11 +2,11 @@ use iso3166::Country;
 use serde::{Deserialize, Serialize};
 use sha3::Sha3_256;
 
-use crate::common::{
+use crate::common::enums::{
     Action, Bonus, Currency, Language, MpiEci, PayType, Prepare, Result, Status, Version,
 };
+use crate::common::traits::{LiqPayRequest, LiqPayResponse};
 use crate::internet_acquiring::common::{DetailAddenda, RroInfo};
-use crate::traits::{LiqPayRequest, LiqPayResponse};
 
 #[derive(Debug, Serialize)]
 pub struct CardPaymentRequest {
@@ -338,7 +338,7 @@ impl CardPaymentRequest {
     fn tavv(mut self, tavv: impl Into<String>, pay_type: PayType) -> Self {
         self.pay_type = Some(pay_type);
         self.tavv = Some(tavv.into());
-        
+
         self
     }
 }

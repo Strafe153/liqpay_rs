@@ -1,3 +1,4 @@
+use iso3166::Country;
 use serde::{Deserialize, Serialize};
 use sha1::Sha1;
 
@@ -36,7 +37,7 @@ pub struct TokenPaymentRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
     sender_city: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    sender_country_code: Option<u16>,
+    sender_country_code: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     sender_first_name: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -150,8 +151,8 @@ impl TokenPaymentRequest {
         self
     }
 
-    pub fn sender_country_code(mut self, code: u16) -> Self {
-        self.sender_country_code = Some(code);
+    pub fn sender_country_code(mut self, country: Country) -> Self {
+        self.sender_country_code = Some(country.id.to_string());
         self
     }
 

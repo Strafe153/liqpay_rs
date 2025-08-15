@@ -206,8 +206,13 @@ impl TokenPaymentRequest {
         self
     }
 
-    pub fn recurring(mut self) -> Self {
+    pub fn merchant_initiated(mut self) -> Self {
         self.is_recurring = Some(true);
+        self
+    }
+
+    pub fn customer_initiated(mut self) -> Self {
+        self.is_recurring = Some(false);
         self
     }
 }

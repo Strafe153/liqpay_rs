@@ -310,6 +310,7 @@ impl StaticQrCodeRequest {
     }
 }
 
+/// Represents the response to a static QR code operation.
 #[derive(Debug, Deserialize)]
 pub struct StaticQrCodeResponse {
     /// Represents the result of the request. Can be either `ok` or `error`.

@@ -47,6 +47,7 @@ impl SendReceiptRequest {
     }
 }
 
+/// Represents a response to sending a receipt to an email address operation.
 #[derive(Debug, Deserialize)]
 pub struct SendReceiptResponse {
     /// Represents the result of the request. Can be either `ok` or `error`.

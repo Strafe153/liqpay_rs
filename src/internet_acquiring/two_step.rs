@@ -378,6 +378,7 @@ impl FundsBlockingRequest {
     }
 }
 
+/// Represents a response to a funds blocking operation.
 #[derive(Deserialize, Debug)]
 pub struct FundsBlockingResponse {
     /// Represents the result of the request. Can be either `ok` or `error`.
@@ -537,6 +538,7 @@ impl PaymentCompletionRequest {
     }
 }
 
+/// Represents a response to a payment completion operation.
 #[derive(Debug, Deserialize)]
 pub struct PaymentCompletionResponse {
     /// Represents the result of the request. Can be either `ok` or `error`.

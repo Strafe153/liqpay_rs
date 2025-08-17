@@ -13,4 +13,5 @@ This project is licensed under either MIT or Apache 2.0 licenses, at your choice
 See the [LICENSE-MIT](LICENSE-MIT) and [LICENSE-APACHE](LICENSE-APACHE) files for details.
 
 ## Note
-Users of this crate are responsible for ensuring that their usage complies with LiqPay's Terms of Service.
+Users of this crate are responsible for ensuring that their usage complies with LiqPay's Terms of Service.  
+Do not use LiqPay's trademarks, logos, or branding without permission.

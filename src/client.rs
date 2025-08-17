@@ -38,12 +38,14 @@ where
     Ok(form_data)
 }
 
+/// A wrapper around reqwest's `Client` to send requests to LiqPay.
 pub struct LiqPayClient {
     client: Client,
     private_key: String,
 }
 
 impl LiqPayClient {
+    /// Constructs a new LiqPay client instance.
     pub fn new(private_key: impl Into<String>) -> Self {
         Self {
             client: Client::new(),
@@ -51,6 +53,7 @@ impl LiqPayClient {
         }
     }
 
+    /// Sends an asynchronous HTTP request to the LiqPay API using the underlying `reqwest::Client`.
     pub async fn send<Req, Resp, Alg>(&self, request: Req) -> Result<Resp, BoxError>
     where
         Req: LiqPayRequest<Resp, Alg> + Serialize,
@@ -73,17 +76,20 @@ impl LiqPayClient {
 }
 
 #[cfg(feature = "blocking")]
+#[cfg_attr(docsrs, doc(cfg(feature = "blocking")))]
 pub mod blocking {
     use super::*;
 
     use reqwest::blocking::Client;
 
+    /// A wrapper around reqwest's blocking `Client` to send requests to LiqPay.
     pub struct BlockLiqPayClient {
         client: Client,
         private_key: String,
     }
 
     impl BlockLiqPayClient {
+        /// Constructs a new blocking LiqPay client instance.
         pub fn new(private_key: impl Into<String>) -> Self {
             Self {
                 client: Client::new(),
@@ -91,6 +97,7 @@ pub mod blocking {
             }
         }
 
+        /// Sends a blocking HTTP request to the LiqPay API using the underlying `reqwest::blocking::Client`.
         pub fn send<Req, Resp, Alg>(&self, request: Req) -> Result<Resp, BoxError>
         where
             Req: LiqPayRequest<Resp, Alg> + Serialize,

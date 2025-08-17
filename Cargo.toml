@@ -9,6 +9,10 @@ keywords = ["liqpay", "api"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/Strafe153/liqpay_rs"
 
+[package.metadata.docs.rs]
+features = ["blocking"]
+rustdoc-args = ["--cfg", "docsrs"]
+
 [features]
 blocking = ["reqwest/blocking"]
 

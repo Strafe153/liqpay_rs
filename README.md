@@ -14,4 +14,4 @@ See the [LICENSE-MIT](LICENSE-MIT) and [LICENSE-APACHE](LICENSE-APACHE) files fo
 
 ## Note
 Users of this crate are responsible for ensuring that their usage complies with LiqPay's Terms of Service.  
-Do not use LiqPay's trademarks, logos, or branding without permission.
+Do NOT use LiqPay's trademarks, logos, or branding without permission.

@@ -34,7 +34,8 @@ impl ArchiveRequest {
 #[derive(Debug, Deserialize)]
 pub struct ArchiveEntry {
     pub status: Status,
-    pub acq_id: Option<u32>,
+    #[serde(rename = "acq_id")]
+    pub acquirer_id: Option<u32>,
     pub action: Option<Action>,
     pub agent_commission: Option<f64>,
     pub amount: Option<f64>,
@@ -62,15 +63,15 @@ pub struct ArchiveEntry {
     pub receiver_commission: Option<f32>,
     pub sender_bonus: Option<f64>,
     pub sender_card_bank: Option<String>,
-    pub sender_card_country: Option<u16>, // ideally should be SenderCountryCode
-    pub sender_card_mask2: Option<String>,
+    pub sender_card_country: Option<u16>,
+    #[serde(rename = "sender_card_mask2")]
+    pub sender_card_mask: Option<String>,
     pub sender_card_type: Option<String>,
     pub sender_commission: Option<f64>,
     pub transaction_id: Option<u64>,
     #[serde(rename = "type")]
     pub operation_type: Option<String>,
-    // potentially would like to use Version enum here but don't know how to implement it yet
-    pub version: Option<u8>,
+    pub version: Option<Version>,
     #[serde(rename = "err_code")]
     pub error_code: Option<String>,
     #[serde(rename = "err_description")]

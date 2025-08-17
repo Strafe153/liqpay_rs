@@ -211,7 +211,8 @@ impl P2PCreditRequest {
 pub struct P2PCreditResponse {
     pub result: Result,
     pub status: Status,
-    pub acq_id: Option<u32>,
+    #[serde(rename = "acq_id")]
+    pub acquirer_id: Option<u32>,
     pub action: Option<Action>,
     pub agent_commission: Option<f64>,
     pub amount: Option<f64>,
@@ -240,7 +241,7 @@ pub struct P2PCreditResponse {
     pub transaction_id: Option<u64>,
     #[serde(rename = "type")]
     pub operation_type: Option<String>,
-    pub version: Option<u8>,
+    pub version: Option<Version>,
     #[serde(rename = "err_code")]
     pub error_code: Option<String>,
     #[serde(rename = "err_description")]

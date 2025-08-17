@@ -13,14 +13,43 @@ pub mod traits {
 }
 
 pub mod enums {
-    use serde::{Deserialize, Serialize};
+    use std::io::{Error, ErrorKind};
+    use std::result::Result as StdResult;
 
-    #[derive(Debug, Deserialize, Serialize)]
+    use serde::{Deserialize, Serialize, de};
+
+    #[derive(Debug, Serialize)]
     pub enum Version {
         #[serde(rename = "3")]
         Three,
         #[serde(rename = "7")]
         Seven,
+    }
+
+    impl TryFrom<u8> for Version {
+        type Error = Error;
+
+        fn try_from(value: u8) -> StdResult<Self, Self::Error> {
+            match value {
+                3 => Ok(Version::Three),
+                7 => Ok(Version::Seven),
+                v => Err(Error::new(
+                    ErrorKind::InvalidInput,
+                    format!("Version {} is not supported.", v),
+                )),
+            }
+        }
+    }
+
+    impl<'de> Deserialize<'de> for Version {
+        fn deserialize<D>(deserializer: D) -> StdResult<Self, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            let deserialized_version = u8::deserialize(deserializer)?;
+
+            Version::try_from(deserialized_version).map_err(de::Error::custom)
+        }
     }
 
     #[derive(Serialize, Deserialize, Debug)]
@@ -45,6 +74,8 @@ pub mod enums {
         Refund,
         #[serde(rename = "hold")]
         Hold,
+        #[serde(rename = "hold_completion")]
+        HoldCompletion,
         #[serde(rename = "subscribe")]
         Subscribe,
         #[serde(rename = "subscribe_update")]

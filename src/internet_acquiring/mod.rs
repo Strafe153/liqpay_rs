@@ -6,4 +6,4 @@ pub mod qr_code;
 pub mod refund;
 pub mod subscription;
 pub mod token;
-pub mod two_stage;
+pub mod two_step;

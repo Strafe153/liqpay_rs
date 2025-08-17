@@ -299,7 +299,7 @@ pub struct Unit {
 pub struct InvoiceUnitsResponse {
     /// Represents the result of the request. Can be either `ok` or `error`.
     pub result: Result,
-    /// Represents the status of the request. 
+    /// Represents the status of the request.
     pub status: Status,
     /// Represents a collection of invoice units.
     pub units: Option<Vec<Unit>>,

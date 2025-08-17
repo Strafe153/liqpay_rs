@@ -187,7 +187,6 @@ pub struct CashPaymentResponse {
     pub action: Option<Action>,
     /// Represents the agent commission.
     pub agent_commission: Option<f64>,
-    /// Represents the agent commission.
     /// Represents the payment amount.
     pub amount: Option<f64>,
     /// Represents the payer bonus amount.

@@ -400,7 +400,6 @@ pub struct FundsBlockingResponse {
     pub action: Option<Action>,
     /// Represents the agent commission.
     pub agent_commission: Option<f64>,
-    /// Represents the agent commission.
     /// Represents the payment amount.
     pub amount: Option<f64>,
     /// Represents the payer bonus amount.
@@ -552,7 +551,6 @@ pub struct PaymentCompletionResponse {
     pub action: Option<Action>,
     /// Represents the agent commission.
     pub agent_commission: Option<f64>,
-    /// Represents the agent commission.
     /// Represents the payment amount.
     pub amount: Option<f64>,
     /// Represents the payer bonus amount.
@@ -653,4 +651,4 @@ pub struct PaymentCompletionResponse {
     pub error_description: Option<String>,
 }
 
-impl LiqPayResponse for  PaymentCompletionResponse {}
+impl LiqPayResponse for PaymentCompletionResponse {}

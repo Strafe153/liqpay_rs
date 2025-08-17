@@ -188,7 +188,6 @@ pub struct DynamicQrCodeResponse {
     pub action: Option<Action>,
     /// Represents the agent commission.
     pub agent_commission: Option<f64>,
-    /// Represents the agent commission.
     /// Represents the payment amount.
     pub amount: Option<f64>,
     /// Represents the payer bonus amount.
@@ -321,7 +320,6 @@ pub struct StaticQrCodeResponse {
     pub id: Option<u32>,
     /// Represent the identifier of a merchant in LiqPay.
     pub shop_id: Option<u32>,
-    /// Represents the agent commission.
     /// Represents the payment amount.
     pub amount: Option<f64>,
     /// Represents the currency of the payment.

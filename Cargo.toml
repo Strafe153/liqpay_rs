@@ -1,11 +1,10 @@
 [package]
 name = "liqpay_rs"
 version = "0.9.3"
-authors = ["Vitalii Knysh <knish.vital@gmail.com>"]
-description = "LiqPay API SDK for Rust"
+description = "Unofficial LiqPay API Client for Rust."
 documentation = "https://docs.rs/liqpay_rs"
 edition = "2024"
-keywords = ["liqpay", "api"]
+keywords = ["unofficial", "liqpay", "api"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/Strafe153/liqpay_rs"
 

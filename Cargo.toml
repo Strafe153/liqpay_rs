@@ -9,7 +9,7 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/Strafe153/unofficial_liqpay_rs"
 
 [package.metadata.docs.rs]
-features = ["blocking"]
+all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
 [features]

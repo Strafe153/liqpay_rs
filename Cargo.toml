@@ -6,7 +6,7 @@ documentation = "https://docs.rs/liqpay_rs"
 edition = "2024"
 keywords = ["unofficial", "liqpay", "api"]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/Strafe153/liqpay_rs"
+repository = "https://github.com/Strafe153/unofficial_liqpay_rs"
 
 [package.metadata.docs.rs]
 features = ["blocking"]

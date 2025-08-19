@@ -1,6 +1,6 @@
 [package]
 name = "liqpay_rs"
-version = "0.9.3"
+version = "0.9.4"
 description = "Unofficial LiqPay API Client for Rust."
 documentation = "https://docs.rs/liqpay_rs"
 edition = "2024"

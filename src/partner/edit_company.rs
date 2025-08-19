@@ -4,6 +4,7 @@ use sha3::Sha3_256;
 use crate::common::enums::{Action, Currency, Result, Status, Version};
 use crate::common::traits::{LiqPayRequest, LiqPayResponse};
 
+/// Represents a request to edit a company's information.
 #[derive(Debug, Serialize)]
 pub struct EditCompanyRequest {
     version: Version,
@@ -40,6 +41,7 @@ pub struct EditCompanyRequest {
 impl LiqPayRequest<EditCompanyResponse, Sha3_256> for EditCompanyRequest {}
 
 impl EditCompanyRequest {
+    /// Construct a new request to edit a company's information.
     pub fn new(
         public_key: impl Into<String>,
         description: String,
@@ -75,11 +77,13 @@ impl EditCompanyRequest {
         }
     }
 
-    pub fn amount_procent_agent(mut self, procent: f32) -> Self {
-        self.amount_percent_agent = Some(procent);
+    /// Sets the percentage of an agent fee.
+    pub fn amount_percent_agent(mut self, percentage: f32) -> Self {
+        self.amount_percent_agent = Some(percentage);
         self
     }
 
+    /// Sets the static fee of an agent.
     pub fn amount_static_agent(mut self, commission: f64, currency: Currency) -> Self {
         self.amount_static_agent = Some(commission);
         self.currency_static_agent = Some(currency);
@@ -87,35 +91,46 @@ impl EditCompanyRequest {
         self
     }
 
+    /// Enables the payment history of the created company to be viewed by the owner.
     pub fn enable_reports(mut self) -> Self {
         self.enable_reports = Some(String::from("true"));
         self
     }
 
+    /// Enables the checkout page to be edited by the owner.
     pub fn enable_checkout_edit(mut self) -> Self {
         self.enable_checkout_edit = Some(String::from("true"));
         self
     }
 
+    /// Sets the URL to a company's logo.
     pub fn logo(mut self, logo: String) -> Self {
         self.logo = Some(logo);
         self
     }
 
+    /// Sets the public phone number of a company.
     pub fn public_phone(mut self, phone: String) -> Self {
         self.public_phone = Some(phone);
         self
     }
 }
 
+/// Represents a response to editing a company's information operation.
 #[derive(Debug, Deserialize)]
 pub struct EditCompanyResponse {
+    /// Represents the result of the request. Can be either `ok` or `error`.
     pub result: Result,
+    /// Represents the status of the request.
     pub status: Status,
+    /// Represents the private key of a company.
     pub private_key: Option<String>,
+    /// Represents the public key of a company.
     pub public_key: Option<String>,
+    /// Holds an error code.
     #[serde(rename = "err_code")]
     pub error_code: Option<String>,
+    /// Holds an error description.
     #[serde(rename = "err_description")]
     pub error_description: Option<String>,
 }

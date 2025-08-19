@@ -271,9 +271,9 @@ pub struct MpiResponse {
     pub mpi_req_md: Option<String>,
     /// Represents a required parameter for ACS authentication.
     pub mpi_re1q_pareq: Option<String>,
-    /// Represents a #D Secure confirmation page URL. 
+    /// Represents a #D Secure confirmation page URL.
     pub mpi_req_url: Option<String>,
-    /// Represents a status of 3D Secure verification. 
+    /// Represents a status of 3D Secure verification.
     pub mpi_status: Option<MpiStatus>,
     /// Contains the value "2.0" if the second version is supported, otherwise empty.
     pub mpi_version: Option<String>,

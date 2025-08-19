@@ -2,6 +2,7 @@ pub mod traits {
     use serde::de::DeserializeOwned;
     use sha1::Digest;
 
+    /// Represents a request to the LiqPay system.
     pub trait LiqPayRequest<Resp, Alg>
     where
         Resp: LiqPayResponse + DeserializeOwned,
@@ -9,13 +10,18 @@ pub mod traits {
     {
     }
 
+    /// Represents a response from a LiqPay system.
     pub trait LiqPayResponse {}
 }
 
 pub mod enums {
-    use serde::{Deserialize, Serialize};
+    use std::io::{Error, ErrorKind};
+    use std::result::Result as StdResult;
 
-    #[derive(Debug, Deserialize, Serialize)]
+    use serde::{Deserialize, Serialize, de};
+
+    /// Represents the API version.
+    #[derive(Debug, Serialize)]
     pub enum Version {
         #[serde(rename = "3")]
         Three,
@@ -23,6 +29,33 @@ pub mod enums {
         Seven,
     }
 
+    impl TryFrom<u8> for Version {
+        type Error = Error;
+
+        fn try_from(value: u8) -> StdResult<Self, Self::Error> {
+            match value {
+                3 => Ok(Version::Three),
+                7 => Ok(Version::Seven),
+                v => Err(Error::new(
+                    ErrorKind::InvalidInput,
+                    format!("Version {} is not supported.", v),
+                )),
+            }
+        }
+    }
+
+    impl<'de> Deserialize<'de> for Version {
+        fn deserialize<D>(deserializer: D) -> StdResult<Self, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            let deserialized_version = u8::deserialize(deserializer)?;
+
+            Version::try_from(deserialized_version).map_err(de::Error::custom)
+        }
+    }
+
+    /// Represents an action.
     #[derive(Serialize, Deserialize, Debug)]
     pub enum Action {
         #[serde(rename = "pay")]
@@ -45,6 +78,8 @@ pub mod enums {
         Refund,
         #[serde(rename = "hold")]
         Hold,
+        #[serde(rename = "hold_completion")]
+        HoldCompletion,
         #[serde(rename = "subscribe")]
         Subscribe,
         #[serde(rename = "subscribe_update")]
@@ -113,6 +148,7 @@ pub mod enums {
         Mpi,
     }
 
+    /// Represents a bonus type.
     #[derive(Deserialize, Debug)]
     pub enum Bonus {
         #[serde(rename = "bonusplus")]
@@ -125,6 +161,7 @@ pub mod enums {
         Promo,
     }
 
+    /// Represents a currency.
     #[derive(Debug, Deserialize, Serialize)]
     pub enum Currency {
         #[serde(rename = "UAH")]
@@ -135,6 +172,7 @@ pub mod enums {
         USD,
     }
 
+    /// Represents a language.
     #[derive(Serialize, Deserialize, Debug)]
     pub enum Language {
         #[serde(rename = "en")]
@@ -143,6 +181,7 @@ pub mod enums {
         Uk,
     }
 
+    /// Represents a 3D Secure status.
     #[derive(Debug, Deserialize, Serialize)]
     pub enum MpiEci {
         #[serde(rename = "5")]
@@ -153,6 +192,7 @@ pub mod enums {
         Without3Ds,
     }
 
+    /// Represents a payment type.
     #[derive(Serialize, Deserialize, Debug)]
     pub enum PayType {
         #[serde(rename = "card")]
@@ -185,6 +225,7 @@ pub mod enums {
         Tavv,
     }
 
+    /// Represent an operation result.
     #[derive(Deserialize, Debug)]
     pub enum Result {
         #[serde(rename = "ok")]
@@ -193,6 +234,7 @@ pub mod enums {
         Error,
     }
 
+    /// Represents an operation status.
     #[derive(Deserialize, Debug)]
     pub enum Status {
         #[serde(rename = "error")]
@@ -263,6 +305,7 @@ pub mod enums {
         Active,
     }
 
+    /// Represents a preparation status.
     #[derive(Debug, Serialize)]
     pub enum Prepare {
         #[serde(rename = "1")]

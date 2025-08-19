@@ -4,6 +4,7 @@ use sha3::Sha3_256;
 use crate::common::enums::{Action, Result, Status, Version};
 use crate::common::traits::{LiqPayRequest, LiqPayResponse};
 
+/// Represents a token creation request.
 #[derive(Debug, Serialize)]
 pub struct CreateTokenRequest {
     version: Version,
@@ -32,6 +33,7 @@ pub struct CreateTokenRequest {
 impl LiqPayRequest<CreateTokenResponse, Sha3_256> for CreateTokenRequest {}
 
 impl CreateTokenRequest {
+    /// Constructs a new request to create a card token using Token connect control.
     pub fn token_connect_control(
         public_key: impl Into<String>,
         is_debit: bool,
@@ -43,6 +45,7 @@ impl CreateTokenRequest {
         request
     }
 
+    /// Constructs a new request to create a card token using VISA cards enrollment hub.
     pub fn visa_cards_enrollment_hub(
         public_key: impl Into<String>,
         is_debit: bool,
@@ -57,6 +60,7 @@ impl CreateTokenRequest {
         request
     }
 
+    /// Constructs a new request to create a card token using a card.
     pub fn card(
         public_key: impl Into<String>,
         is_debit: bool,
@@ -75,6 +79,7 @@ impl CreateTokenRequest {
         request
     }
 
+    /// Sets a token to be unique upon creation.
     pub fn unique(mut self, expiration_date: String) -> Self {
         self.action = Action::CreateUniqueToken;
         self.expiration_date = Some(expiration_date);
@@ -101,6 +106,7 @@ impl CreateTokenRequest {
     }
 }
 
+/// Represents a card token information status.
 #[derive(Debug, Deserialize)]
 pub enum CardTokenInfoStatus {
     #[serde(rename = "INACTIVE")]
@@ -113,6 +119,7 @@ pub enum CardTokenInfoStatus {
     Deleted,
 }
 
+/// Represents a card token information description.
 #[derive(Debug, Deserialize)]
 pub enum CardtokenInfoDescription {
     #[serde(rename = "APPROVED")]
@@ -127,32 +134,46 @@ pub enum CardtokenInfoDescription {
     Error,
 }
 
+/// Represents card token information.
 #[derive(Debug, Deserialize)]
 pub struct CardTokenInfo {
+    /// Represents a token reference.
     #[serde(rename = "tokenRef")]
     pub token_ref: Option<String>,
+    /// Represents a token suffix, which is the last 4 digits.
     #[serde(rename = "tokenSuffix")]
     pub token_suffix: Option<String>,
+    /// Represents a token expiration date.
     #[serde(rename = "tokenExpDate")]
     pub token_exp_date: Option<String>,
+    /// Represents a token status.
     pub status: Option<CardTokenInfoStatus>,
+    /// Represents the payment decision regarding card digitization for MasterCard-only payments.
     pub decision: CardtokenInfoDescription,
 }
 
+/// Represents a token creation response.
 #[derive(Debug, Deserialize)]
 pub struct CreateTokenResponse {
-    pub result: String,
-    pub status: Option<String>,
+    /// Represents the result of the request. Can be either `ok` or `error`.
+    pub result: Result,
+    /// Represents the status of the operation.
+    pub status: Option<Status>,
+    /// Represents the generated card token.
     pub card_token: Option<String>,
+    /// Represents the additional card token information.
     pub card_token_info: Option<CardTokenInfo>,
+    /// Holds an error code.
     #[serde(rename = "err_code")]
     pub error_code: Option<String>,
+    /// Holds an error description.
     #[serde(rename = "err_description")]
     pub error_description: Option<String>,
 }
 
 impl LiqPayResponse for CreateTokenResponse {}
 
+/// Represents a card token action.
 #[derive(Debug, Serialize)]
 pub enum CardTokenAction {
     #[serde(rename = "SUSPEND")]
@@ -163,6 +184,7 @@ pub enum CardTokenAction {
     Delete,
 }
 
+/// Represents a request to change a token status.
 #[derive(Debug, Serialize)]
 pub struct ChangeTokenStatusRequest {
     version: Version,
@@ -175,6 +197,7 @@ pub struct ChangeTokenStatusRequest {
 impl LiqPayRequest<ChangeTokenStatusResponse, Sha3_256> for ChangeTokenStatusRequest {}
 
 impl ChangeTokenStatusRequest {
+    /// Constructs a new request to change a token status.
     pub fn new(
         public_key: impl Into<String>,
         card_token: String,
@@ -190,14 +213,21 @@ impl ChangeTokenStatusRequest {
     }
 }
 
+/// Represents a response of changing a token status.
 #[derive(Debug, Deserialize)]
 pub struct ChangeTokenStatusResponse {
+    /// Represents the result of the request. Can be either `ok` or `error`.
     pub result: Result,
+    /// Represents the status of the operation.
     pub status: Option<Status>,
+    /// Represents the generated card token.
     pub card_token: Option<String>,
+    /// Represents the additional card token information.
     pub card_token_info: Option<CardTokenInfo>,
+    /// Holds an error code.
     #[serde(rename = "err_code")]
     pub error_code: Option<String>,
+    /// Holds an error description.
     #[serde(rename = "err_description")]
     pub error_description: Option<String>,
 }

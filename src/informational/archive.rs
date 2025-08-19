@@ -1,46 +1,48 @@
 use serde::{Deserialize, Serialize};
 use sha3::Sha3_256;
 
-use crate::common::enums::{
-    Action, Bonus, Currency, Language, MpiEci, PayType, Result, Status, Version,
-};
+use crate::common::enums::{Action, Currency, Language, MpiEci, PayType, Status, Version};
 use crate::common::traits::{LiqPayRequest, LiqPayResponse};
+use crate::informational::common::ResponseFormat;
 
-/// Represents a request to confirm an operation with a one-time password.
+/// Represents a request to get an archive of received payments.
 #[derive(Debug, Serialize)]
-pub struct OtpRequest {
+pub struct ArchiveRequest {
     version: Version,
-    action: Action,
     public_key: String,
-    otp: String,
-    #[serde(rename = "confirm_token")]
-    token: String,
+    action: Action,
+    date_from: String,
+    date_to: String,
+    #[serde(rename = "resp_format")]
+    response_format: ResponseFormat,
 }
 
-impl LiqPayRequest<OtpResponse, Sha3_256> for OtpRequest {}
+impl LiqPayRequest<ArchiveResponse, Sha3_256> for ArchiveRequest {}
 
-impl OtpRequest {
-    /// Constructs a new request to confirm an operation with a one-time password.
-    pub fn new(public_key: impl Into<String>, otp: String, token: String) -> Self {
+impl ArchiveRequest {
+    /// Constructs a new request to get an archive of received payments.
+    pub fn new(public_key: impl Into<String>, date_from: String, date_to: String) -> Self {
         Self {
             version: Version::Seven,
-            action: Action::Confirm,
+            action: Action::Reports,
             public_key: public_key.into(),
-            otp,
-            token,
+            response_format: ResponseFormat::Json,
+            date_from,
+            date_to,
         }
     }
 }
 
-/// Represents the response to a one-time password confirmation operation.
+/// Represents an archive payment entry.
 #[derive(Debug, Deserialize)]
-pub struct OtpResponse {
-    /// Represents the result of the request. Can be either `ok` or `error`.
-    pub result: Result,
+pub struct ArchiveEntry {
     /// Represents the status of the request. Possible values are `error` - incorrect data,
     /// `failure` - payment failed, `reversed` - payment refunded, `success` - successful payment,
-    /// `3ds_verify` - the verification by 3DS is required, `wait_secure` - verified payment,
-    /// `wait_accept` - the store is not verified at this point, but the money are withdrawn from a client.
+    /// `3ds_verify` - the verification by 3DS is required, `cvv_verify` - CVV required,
+    /// `otp_verify` - confirmation by OTP is required, `receiver_verify` - additional receiver
+    /// information is required, `sender_verify` - additional sender information is required,
+    /// `wait_accept` - the store is not verified at this point, but the money are withdrawn from a client,
+    /// `wait_secure` - verified payment.
     pub status: Status,
     /// Represents the identifier of an acquirer.
     #[serde(rename = "acq_id")]
@@ -59,17 +61,6 @@ pub struct OtpResponse {
     pub amount_credit: Option<f64>,
     /// Represents the payment debit amount.
     pub amount_debit: Option<f64>,
-    /// Represents the authorization code for credit.
-    pub authcode_credit: Option<String>,
-    /// Represents the authorization code for debit.
-    pub authcode_debit: Option<String>,
-    /// Represents the bonus percentage.
-    #[serde(rename = "bonus_procent")]
-    pub bonus_percent: Option<f32>,
-    /// Represents the bonus type. Possible values are `bonusplus`, `personal`, `promo` and `discount_club`.
-    pub bonus_type: Option<Bonus>,
-    /// Represents the sender's card token.
-    pub card_token: Option<String>,
     /// Represents the commission charged to credit.
     pub commission_credit: Option<f64>,
     /// Represents the commission charged to debit.
@@ -77,8 +68,6 @@ pub struct OtpResponse {
     /// Represents the payment creation date.
     #[serde(rename = "create_date")]
     pub creation_date: Option<u64>,
-    /// Represents the phone number used for confirmation via a one-time password.
-    pub confirm_phone: Option<String>,
     /// Represents the currency of the payment.
     pub currency: Option<String>,
     /// Represents the currency used for credit.
@@ -89,8 +78,6 @@ pub struct OtpResponse {
     pub description: Option<String>,
     /// Represents the end date of the payment.
     pub end_date: Option<u64>,
-    /// Represents the IP address of a sender.
-    pub ip: Option<String>,
     /// Indicates whether a transaction passed with 3DS.
     pub is_3ds: Option<bool>,
     /// Represents the language of the payment.
@@ -100,8 +87,6 @@ pub struct OtpResponse {
     /// Represents the MPI ECI code. Possible values are `5` - passed with 3DS,
     /// `6` - 3DS is not supported by the card's issuer, `7` - passed without 3DS
     pub mpi_eci: Option<MpiEci>,
-    /// Represents ACS value after authentication, returned by the issuer.
-    pub mpi_cres: Option<String>,
     /// Represents the identifier of an order.
     pub order_id: Option<String>,
     /// Represents the identifier of a payment.
@@ -116,12 +101,6 @@ pub struct OtpResponse {
     pub public_key: Option<String>,
     /// Represents the receiver's commission.
     pub receiver_commission: Option<f32>,
-    /// Represents the identifier of the transaction in a the issuer bank's system for credit.
-    #[serde(rename = "rrn_credit")]
-    pub retrieval_reference_number_credit: Option<String>,
-    /// Represents the identifier of the transaction in a the issuer bank's system for debit.
-    #[serde(rename = "rrn_debit")]
-    pub retrieval_reference_number_debit: Option<String>,
     /// Represents the sender's bonus amount.
     pub sender_bonus: Option<f64>,
     /// Represents the sender's bank.
@@ -135,12 +114,6 @@ pub struct OtpResponse {
     pub sender_card_type: Option<String>,
     /// Represents the sender's commission amount.
     pub sender_commission: Option<f64>,
-    /// Represents the sender's first name.
-    pub sender_first_name: Option<String>,
-    /// Represents the sender's last name.
-    pub sender_last_name: Option<String>,
-    /// Represents the sender's phone number.
-    pub sender_phone: Option<String>,
     /// Represents the identifier of a transaction in LiqPay.
     pub transaction_id: Option<u64>,
     /// Represents the type of an operation.
@@ -156,4 +129,30 @@ pub struct OtpResponse {
     pub error_description: Option<String>,
 }
 
-impl LiqPayResponse for OtpResponse {}
+/// Represents an operation result.
+#[derive(Debug, Deserialize)]
+pub enum Result {
+    #[serde(rename = "success")]
+    Success,
+    #[serde(rename = "error")]
+    Error,
+}
+
+/// Represents the response to getting an archive of received payments operation.
+#[derive(Debug, Deserialize)]
+pub struct ArchiveResponse {
+    /// Represents the result of the request. Can be either `success` or `error`.
+    pub result: Result,
+    /// Represents the status of the request.
+    pub status: Option<Status>,
+    /// Represents the collection of archive entries.
+    pub data: Option<Vec<ArchiveEntry>>,
+    /// Holds an error code.
+    #[serde(rename = "err_code")]
+    pub error_code: Option<String>,
+    /// Holds an error description.
+    #[serde(rename = "err_description")]
+    pub error_description: Option<String>,
+}
+
+impl LiqPayResponse for ArchiveResponse {}

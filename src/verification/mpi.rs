@@ -4,6 +4,7 @@ use sha3::Sha3_256;
 use crate::common::enums::{Action, Currency, Language, Result, Status, Version};
 use crate::common::traits::{LiqPayRequest, LiqPayResponse};
 
+/// Represents the depth of a browser color.
 #[derive(Debug, Serialize)]
 pub enum BrowserColorDepth {
     #[serde(rename = "1")]
@@ -26,6 +27,7 @@ pub enum BrowserColorDepth {
     FortyEight,
 }
 
+/// Represents additional 3D Secure information.
 #[derive(Debug, Serialize)]
 pub struct ThreeDsInfo {
     #[serde(rename = "notificationURL")]
@@ -53,6 +55,7 @@ pub struct ThreeDsInfo {
 }
 
 impl ThreeDsInfo {
+    /// Constructs a new instance of additional 3D Secure information.
     pub fn new(
         notification_url: String,
         browser_language: String,
@@ -82,17 +85,20 @@ impl ThreeDsInfo {
         }
     }
 
+    /// Sets JavaScript execution in a customer's browser to disabled.
     pub fn disable_java_script(mut self) -> Self {
         self.browser_java_enabled = Some(false);
         self
     }
 
+    /// Sets Java execution in a customer's browser to enabled.
     pub fn enable_java(mut self) -> Self {
         self.browser_java_enabled = Some(true);
         self
     }
 }
 
+/// Represents a request to verify a card for 3DS support.
 #[derive(Debug, Serialize)]
 pub struct MpiRequest {
     version: Version,
@@ -124,6 +130,7 @@ pub struct MpiRequest {
 impl LiqPayRequest<MpiResponse, Sha3_256> for MpiRequest {}
 
 impl MpiRequest {
+    /// Constructs a new request to verify a card for 3DS support.
     pub fn new(
         public_key: impl Into<String>,
         amount: f64,
@@ -156,94 +163,128 @@ impl MpiRequest {
         }
     }
 
+    /// Sets the card CVV/CVV2 code.
     pub fn cvv(mut self, cvv: String) -> Self {
         self.card_cvv = Some(cvv);
         self
     }
 
+    /// Sets the email of a customer.
     pub fn email(mut self, email: String) -> Self {
         self.email = Some(email);
         self
     }
 
+    /// Sets the customer's IP address.
     pub fn ip(mut self, ip: String) -> Self {
         self.ip = Some(ip);
         self
     }
 
+    /// Sets the customer's language. Allowed values are `uk` - Ukrainian and `en` - English.
     pub fn language(mut self, language: Language) -> Self {
         self.language = Some(language);
         self
     }
 
+    /// Sets a payment action to `hold`.
     pub fn hold_action(mut self) -> Self {
         self.action_payment = Some(Action::Hold);
         self
     }
 
+    /// Sets a payment action to `subscribe`.
     pub fn subscribe_action(mut self) -> Self {
         self.action_payment = Some(Action::Subscribe);
         self
     }
 
+    /// Sets a payment action to `paydonate`.
     pub fn pay_donate_action(mut self) -> Self {
         self.action_payment = Some(Action::PayDonate);
         self
     }
 
+    /// Sets a payment action to `auth`.
     pub fn auth_action(mut self) -> Self {
         self.action_payment = Some(Action::Auth);
         self
     }
 
+    /// Sets a payment action to `p2p`.
     pub fn p2p_action(mut self) -> Self {
         self.action_payment = Some(Action::P2P);
         self
     }
 
+    /// Sets a payment action to `p2pdebit`.
     pub fn p2p_debit(mut self) -> Self {
         self.action_payment = Some(Action::P2PDebit);
         self
     }
 
+    /// Sets the sender's first name.
     pub fn sender_first_name(mut self, name: String) -> Self {
         self.sender_first_name = Some(name);
         self
     }
 
+    /// Sets the sender's last name.
     pub fn sender_last_name(mut self, name: String) -> Self {
         self.sender_last_name = Some(name);
         self
     }
 
+    /// Sets additional 3D Secure information.
     pub fn three_ds_info(mut self, info: ThreeDsInfo) -> Self {
         self.three_ds_info = Some(info);
         self
     }
 }
 
+/// Represents an MPI status.
 #[derive(Debug, Deserialize)]
 pub enum MpiStatus {
+    /// In 3DS Version 1.0 represents the support for 3D Secure,
+    /// in Version 2.0 - no additional verification required.
     Y,
+    /// In Version 2.0 means no additional verification required.
     A,
+    /// in Version 2.0 means that required additional verification.
     C,
+    /// In 3DS Version 1.0 represents the lack of required 3DS verification,
+    /// in Version 2.0 means client verification failed.
     N,
+    /// In both 3DS Version 1.0 and  2.0 represents the failed card verification.
     U,
 }
 
+/// Represents the response to a 3D Secure card verification operation.
 #[derive(Debug, Deserialize)]
 pub struct MpiResponse {
-    pub mpi_req_md: Option<String>,
-    pub mpi_re1q_pareq: Option<String>,
-    pub mpi_req_url: Option<String>,
-    pub mpi_status: Option<MpiStatus>,
-    pub mpi_version: Option<String>,
-    pub mpi_form: Option<String>,
-    pub mpi_cres: Option<String>,
-    pub status: Option<Status>,
+    /// Represents the status of the request.
+    /// Possible values are `error` - incorrect data, `failure` - payment failed.
+    pub status: Status,
+    /// Represents the result of the request.
     pub result: Option<Result>,
+    /// Represents a required parameter for ACS authentication.
+    pub mpi_req_md: Option<String>,
+    /// Represents a required parameter for ACS authentication.
+    pub mpi_re1q_pareq: Option<String>,
+    /// Represents a #D Secure confirmation page URL.
+    pub mpi_req_url: Option<String>,
+    /// Represents a status of 3D Secure verification.
+    pub mpi_status: Option<MpiStatus>,
+    /// Contains the value "2.0" if the second version is supported, otherwise empty.
+    pub mpi_version: Option<String>,
+    /// Represents the authentication form if the second version is supported.
+    pub mpi_form: Option<String>,
+    /// Represents the required parameter for authentication for N and Y statuses.
+    pub mpi_cres: Option<String>,
+    /// Holds an error code.
     #[serde(rename = "err_code")]
     pub error_code: Option<String>,
+    /// Holds an error description.
     #[serde(rename = "err_description")]
     pub error_description: Option<String>,
 }
